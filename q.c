@@ -28,7 +28,7 @@ int main(void)
    pop(&s);
    // struct Queue *q =createQueue ();
    // printf("The address of queue is %p, stack is %p, the stack data is %d, the stack next is %p\n", q, q->stack, q->stack->data, q->stack->next);
-   // enQueue (q,1);//test2
+   // enQueue (q,1);//again
    // deQueue (q);
    // deQueue (q);
    return 0;
