@@ -30,7 +30,7 @@ int main(void)
    // printf("The address of queue is %p, stack is %p, the stack data is %d, the stack next is %p\n", q, q->stack, q->stack->data, q->stack->next);
    // enQueue (q,1);
    // deQueue (q);
-   // deQueue (q);
+   // deQueue (q);//test
    return 0;
 }
 void push(struct sNode **top, int new_data)
