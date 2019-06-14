@@ -22,7 +22,7 @@ int main(void)
 {
    //!stack=showMemory(start=65520, cursors=[q,stack])
    struct sNode *s =createStack ();
-   printf("The address of stack at first creation is %p and the data is %d and the next is %d\n", s, s->data, s->next);
+   printf("The address of stack at first creation is %p and the data is %d and the next is %p\n", s, s->data, s->next);
    push(&s, 2);
    pop(&s);
    pop(&s);
