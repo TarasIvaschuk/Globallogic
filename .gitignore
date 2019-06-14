@@ -71,6 +71,8 @@ hs_err_pid*
 /.allure/
 *.bin
 *.exe
+*.bat
+*.cmd
 
 # Ignore log
 *.log
