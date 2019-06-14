@@ -15,29 +15,21 @@ void push(struct sNode **top, int new_data);
 int pop(struct sNode **top);
 void enQueue(struct Queue *queue, int data);
 int deQueue(struct Queue *queue);
+struct sNode *createStack();
+struct Queue *createQueue();
 
 int main(void)
 {
    //!stack=showMemory(start=65520, cursors=[q,stack])
-   struct sNode *s = (struct sNode *)malloc(sizeof(struct sNode));
+   struct sNode *s =createStack ();
    printf("The address of stack at first creation is %p and the data is %d and the next is %d\n", s, s->data, s->next);
-   s->next=NULL;
    push(&s, 2);
    pop(&s);
    pop(&s);
-   // push(&s, 1);
-   // pop(&s);
-   // pop(&s);
-   // printf("The address of q->stack->data is hello\n");
-   // struct Queue * q= (struct Queue *)malloc (sizeof (struct Queue));
-   // q->stack=NULL;
-   // printf("The address of queue at first creation is %p and the stack is %p\n", q, q->stack);
-//    printf("The address of q->stack->next is %d\n",*((*q).stack).data);
-   // printf("The address of q->stack->data is %d\n",q->stack->data);
-
+   // struct Queue *q =createQueue ();
+   // printf("The address of queue is %p, stack is %p, the stack data is %d, the stack next is %p\n", q, q->stack, q->stack->data, q->stack->next);
    // enQueue (q,1);
-   // enQueue (q,2);
-   // enQueue (q,3);
+   // deQueue (q);
    // deQueue (q);
    return 0;
 }
@@ -47,8 +39,8 @@ void push(struct sNode **top, int new_data)
    struct sNode *new_node = (struct sNode *)malloc(sizeof(struct sNode));
    if (new_node == NULL)
    {
-       printf("Stack overflow \n");
-       return;
+      printf("Stack overflow \n");
+      return;
    }
    new_node->data = new_data;
    printf("address of new value is %p ", new_node);
@@ -59,11 +51,11 @@ void push(struct sNode **top, int new_data)
 int pop(struct sNode **top)
 {
    //!heap=showMemory (start=100, cursors=[lastNode])
-   if ((*top)->next == NULL)//works with stack
+   if ((*top)->next == NULL) //works with stack
    // if ((*top) == NULL) //works with queue
    {
-       printf("Stack underflow \n");
-       return -555555;
+      printf("Stack underflow \n");
+      return -555555;
    }
    struct sNode *lastNode = *top;
    int num = lastNode->data;
@@ -79,20 +71,37 @@ void enQueue(struct Queue *queue, int value)
 }
 int deQueue(struct Queue *queue)
 {
+   if (queue->stack->next == NULL) { 
+        printf("Q is empty"); 
+        getchar(); 
+        exit(0); 
+    } 
 
-   if (queue->stack->next == NULL)
+   if (queue->stack->next->next == NULL)
    {
-       int res=pop(&(queue->stack));
-       printf ("Dequeue the %d\n",res);
-       return res;
+      int res = pop(&(queue->stack));
+      printf("Dequeue the %d\n", res);
+      return res;
    }
    else
    {
-       int x = pop(&(queue->stack));
-       int temp = deQueue(queue);
-       push(&(queue->stack),x);
-       return temp;
+      int x = pop(&(queue->stack));
+      int temp = deQueue(queue);
+      push(&(queue->stack), x);
+      return temp;
    }
 }
-
-
+struct sNode *createStack()
+{
+   struct sNode *new_node = (struct sNode *)malloc(sizeof(struct sNode));
+   new_node->data = 0;
+   new_node->next = NULL;
+   return new_node;
+}
+struct Queue *createQueue()
+{
+   struct Queue *q = (struct Queue *)malloc(sizeof(struct Queue));
+   struct sNode *s = createStack();
+   q->stack = s;
+   return q;
+}
