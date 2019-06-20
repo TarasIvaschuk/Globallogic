@@ -48,6 +48,7 @@ hs_err_pid*
 /reports/
 /.idea/
 *.iml
+/.vscode/
 
 # Multi Modules Project
 /**/.externalToolBuilders/
