@@ -1,5 +1,8 @@
 # Compiled class file
 *.class
+*.i
+*.s
+*.o
 
 # Log file
 *.log
@@ -103,6 +106,7 @@ hs_err_pid*
 /bower_components/
 
 # npm
-/node_modules/
+/**/node_modules/
 ll.js
 unwrap.js
+

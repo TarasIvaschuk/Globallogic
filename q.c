@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* Implementation of queue via stack+recursion
+details see https://www.geeksforgeeks.org/queue-data-structure/
+Implemented add to queue and stack with default value of 1 
+by means of macro */
+
+#define Push(stack,...)  push(stack,(((sizeof((int[])\
+{0, ##__VA_ARGS__})/sizeof(int)-1)==0)? 1:__VA_ARGS__##0/10))
+
+#define EnQueue(queue,...)  enQueue(queue,(((sizeof((int[])\
+{0, ##__VA_ARGS__})/sizeof(int)-1)==0)? 1:__VA_ARGS__##0/10))
+
 struct sNode
 {
    int data;
@@ -23,14 +34,14 @@ int main(void)
    //!stack=showMemory(start=65520, cursors=[q,stack])
    struct sNode *s =createStack ();
    printf("The address of stack at first creation is %p and the data is %d and the next is %p\n", s, s->data, s->next);
-   push(&s, 2);
+   Push(&s);
    pop(&s);
    pop(&s);
-   // struct Queue *q =createQueue ();
-   // printf("The address of queue is %p, stack is %p, the stack data is %d, the stack next is %p\n", q, q->stack, q->stack->data, q->stack->next);
-   // enQueue (q,1);//again
-   // deQueue (q);
-   // deQueue (q);
+   struct Queue *q =createQueue ();
+   printf("The address of queue is %p, stack is %p, the stack data is %d, the stack next is %p\n", q, q->stack, q->stack->data, q->stack->next);
+   EnQueue (q);//again
+   deQueue (q);
+   deQueue (q);
    return 0;
 }
 void push(struct sNode **top, int new_data)
@@ -43,8 +54,8 @@ void push(struct sNode **top, int new_data)
       return;
    }
    new_node->data = new_data;
-   printf("address of new value is %p ", new_node);
-   printf("push the %d\n", new_data);
+   printf("address of new value is %p\n ", new_node);
+   printf("Push the %d\n", new_data);
    new_node->next = (*top);
    (*top) = new_node;
 }
@@ -59,7 +70,7 @@ int pop(struct sNode **top)
    }
    struct sNode *lastNode = *top;
    int num = lastNode->data;
-   printf("the top is %p ", *top);
+   printf("the top is %p\n ", *top);
    (*top) = lastNode->next;
    free(lastNode);
    printf("pop the %d\n", num);
@@ -72,7 +83,7 @@ void enQueue(struct Queue *queue, int value)
 int deQueue(struct Queue *queue)
 {
    if (queue->stack->next == NULL) { 
-        printf("Q is empty"); 
+        printf("Q is empty\n"); 
         getchar(); 
         exit(0); 
     } 
