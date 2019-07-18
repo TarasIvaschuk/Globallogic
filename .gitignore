@@ -107,6 +107,7 @@ hs_err_pid*
 
 # npm
 /**/node_modules/
+/**/tost/
 ll.js
 unwrap.js
 
