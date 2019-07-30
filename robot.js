@@ -23,6 +23,9 @@ function buildGraph(edges) {
   }
   return graph;
 }
+
+/* 1. we have buid a graph  */
+
 const roadGraph = buildGraph(roads);
 
 class VillageState {
@@ -44,11 +47,7 @@ class VillageState {
     }
   }
 }
-
-let first = new VillageState("Post Office", [
-  { place: "Post Office", address: "Alice's House" }
-]);
-let next = first.move("Alice's House");
+/* this is the main function */
 
 function runRobot(state, robot, memory) {
   for (let turn = 0; ; turn++) {
@@ -62,6 +61,7 @@ function runRobot(state, robot, memory) {
     console.log(`Moved to ${action.direction}`);
   }
 }
+/* this is option with random robot . Not so efficient */
 
 function randomPick(array) {
   let choice = Math.floor(Math.random() * array.length);
@@ -70,6 +70,10 @@ function randomPick(array) {
 function randomRobot(state) {
   return { direction: randomPick(roadGraph[state.place]) };
 }
+
+/* this is used to create start conditions.
+This generates start state */
+
 VillageState.random = function (parcelCount = 5) {
   let parcels = [];
   for (let i = 0; i < parcelCount; i++) {
@@ -83,4 +87,51 @@ VillageState.random = function (parcelCount = 5) {
   return new VillageState("Post Office", parcels);
 };
 
-runRobot(VillageState.random(), randomRobot);
+/* this is 2 option. It is faster than random
+ robot but not optimal*/
+
+const mailRoute = [
+  "Alice's House", "Cabin", "Alice's House", "Bob's House",
+  "Town Hall", "Daria's House", "Ernie's House",
+  "Grete's House", "Shop", "Grete's House", "Farm",
+  "Marketplace", "Post Office"
+];
+
+function routeRobot(state, memory) {
+  if (memory.length == 0) {
+      memory = mailRoute;
+  }
+  return { direction: memory[0], memory: memory.slice(1) };
+}
+
+/* this is third option with smart robot.
+The fastest one */
+
+function findRoute(graph, from, to) {
+  let work = [{ at: from, route: [] }];
+  for (let i = 0; i < work.length; i++) {
+    let { at, route } = work[i];
+    for (let place of graph[at]) {
+      if (place == to) return route.concat(place);
+      if (!work.some(w => w.at == place)) {
+        work.push({ at: place, route: route.concat(place) });
+      }
+    }
+  }
+}
+
+function goalOrientedRobot({ place, parcels }, route) {
+  if (route.length == 0) {
+    let parcel = parcels[0];
+    if (parcel.place != place) {
+      route = findRoute(roadGraph, place, parcel.place);
+    } else {
+      route = findRoute(roadGraph, place, parcel.address);
+    }
+  }
+  return { direction: route[0], memory: route.slice(1) };
+}
+
+/* THE TEST DEMO OF PROGRAMM */
+let emptyRoute=[];
+runRobot(VillageState.random(), goalOrientedRobot, emptyRoute);
