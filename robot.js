@@ -50,9 +50,9 @@ class VillageState {
 /* this is the main function */
 
 function runRobot(state, robot, memory) {
-  for (let turn = 0; ; turn++) {
+  for (let turns = 0; ; turns++) {
     if (state.parcels.length == 0) {
-      console.log(`Done in ${turn} turns`);
+      console.log(`Done in ${turns} turns`);
       break;
     }
     let action = robot(state, memory);
@@ -61,9 +61,9 @@ function runRobot(state, robot, memory) {
     console.log(`Moved to ${action.direction}`);
   }
 }
-/* this is option with random robot . Not so efficient */
+/* this is option with random robot . Not so efficient without memory*/
 
-function randomPick(array) {
+var randomPick=(array)=> {
   let choice = Math.floor(Math.random() * array.length);
   return array[choice];
 }
@@ -135,16 +135,19 @@ function goalOrientedRobot({ place, parcels }, route) {
 /* THE TEST DEMO OF PROGRAMM */
 // let emptyRoute=[];
 // runRobot(VillageState.random(), goalOrientedRobot, []);
-compareRobots(goalOrientedRobot, goalOrientedRobot);
+compareRobots(goalOrientedRobot, goalOrientedRobot,mailRoute,randomPick);
 
-function compareRobots(robot1, robot2) {
+function compareRobots(robot1, robot2, mailRoute,randomPick) {
   let measurements=100;
   let rbt1Steps=0;
   let rbt2Steps=0;
-  let memoryRbt1=[{},{}];
-  let memoryRbt2=[{},{}];
+  let memoryRbt1=[];
+  let memoryRbt2=[];
+
   for (let i =0; i<measurements;i++){
     let state= VillageState.random();
+    memoryRbt1=randomMemory(mailRoute,randomPick);
+    memoryRbt2=randomMemory(mailRoute,randomPick);
     rbt1Steps += runRobotSteps(state, robot1, memoryRbt1);
     rbt2Steps += runRobotSteps(state, robot2, memoryRbt2);
   }
@@ -156,10 +159,10 @@ function compareRobots(robot1, robot2) {
 }
 
 function runRobotSteps(state, robot, memory) {
-  let turn=0;
-  for (; ; turn++) {
+  let turns=0;
+  for (; ; turns++) {
     if (state.parcels.length == 0) {
-      console.log(`Done in ${turn} turns`);
+      console.log(`Done in ${turns} turns`);
       break;
     }
     let action = robot(state, memory);
@@ -167,5 +170,16 @@ function runRobotSteps(state, robot, memory) {
     memory = action.memory;
     console.log(`Moved to ${action.direction}`);
   }
-    return turn;
+    return turns;
+}
+function randomMemory (mailRoute,randomPick) {
+  let size = Math.floor(Math.random() * mailRoute.length);
+  let memory=[];
+  let choice;
+
+  for (let i=0;i<size;i++){
+    choice=randomPick(mailRoute);
+    memory.push(choice);
+  }
+  return memory;
 }
