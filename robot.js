@@ -133,12 +133,39 @@ function goalOrientedRobot({ place, parcels }, route) {
 }
 
 /* THE TEST DEMO OF PROGRAMM */
-let emptyRoute=[];
-runRobot(VillageState.random(), goalOrientedRobot, []);
+// let emptyRoute=[];
+// runRobot(VillageState.random(), goalOrientedRobot, []);
+compareRobots(goalOrientedRobot, goalOrientedRobot);
 
-compareRobots (robot1, robot2){
-let rbt1Avg=rbt1Steps;
-let rbt2Avg=rbt2Steps;
- console.log ("The average of robot 1 is "+rbt1Avg);
- console.log ("The average of robot 2 is "+rbt2Avg);
+function compareRobots(robot1, robot2) {
+  let measurements=100;
+  let rbt1Steps=0;
+  let rbt2Steps=0;
+  let memoryRbt1=[{},{}];
+  let memoryRbt2=[{},{}];
+  for (let i =0; i<measurements;i++){
+    let state= VillageState.random();
+    rbt1Steps += runRobotSteps(state, robot1, memoryRbt1);
+    rbt2Steps += runRobotSteps(state, robot2, memoryRbt2);
+  }
+
+  let rbt1Avg = rbt1Steps / measurements;
+  let rbt2Avg = rbt2Steps / measurements;
+  console.log("The average of robot 1 is " + rbt1Avg);
+  console.log("The average of robot 2 is " + rbt2Avg);
+}
+
+function runRobotSteps(state, robot, memory) {
+  let turn=0;
+  for (; ; turn++) {
+    if (state.parcels.length == 0) {
+      console.log(`Done in ${turn} turns`);
+      break;
+    }
+    let action = robot(state, memory);
+    state = state.move(action.direction);
+    memory = action.memory;
+    console.log(`Moved to ${action.direction}`);
+  }
+    return turn;
 }
