@@ -134,4 +134,11 @@ function goalOrientedRobot({ place, parcels }, route) {
 
 /* THE TEST DEMO OF PROGRAMM */
 let emptyRoute=[];
-runRobot(VillageState.random(), goalOrientedRobot, emptyRoute);
+runRobot(VillageState.random(), goalOrientedRobot, []);
+
+compareRobots (robot1, robot2){
+let rbt1Avg=rbt1Steps;
+let rbt2Avg=rbt2Steps;
+ console.log ("The average of robot 1 is "+rbt1Avg);
+ console.log ("The average of robot 2 is "+rbt2Avg);
+}
