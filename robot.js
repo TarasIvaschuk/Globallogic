@@ -132,10 +132,48 @@ function goalOrientedRobot({ place, parcels }, route) {
   return { direction: route[0], memory: route.slice(1) };
 }
 
+function cleverRobot(state, memory) {
+  let action = { direction: "", memory: "" };
+  if (memory.length == 0) {
+    let parcel = state.parcels[0];
+    memory1 = findRoute(roadGraph, state.place, parcel.place);
+    memory2 = findRoute(roadGraph, state.place, parcel.address);
+    memory= memory1.length>memory2.length? memory2: memory1;
+  } 
+  action.direction = memory[0];
+  action.memory = memory.slice(1);
+  console.log (action);
+  return action;
+}
+
+function shortestRoute (state){
+  let shortestRoute=[];
+  let currentRoute=[];
+  //init shortestRoute for comparing
+  if (state.parcels[0].place != state.place) {
+    shortestRoute= findRoute(roadGraph, state.place, state.parcels[0].place);
+  } else {
+    shortestRoute=findRoute (roadGraph, state.place, state.parcels[0].address);
+  }
+  // console.log (state.parcels[0]);
+  for (let i = 0;i < state.parcels.length; i++){
+    if (state.parcels[i].place != state.place) {
+      currentRoute=findRoute(roadGraph, state.place, state.parcels[i].place);
+    }
+    if (state.parcels[i].address != state.place) {
+      currentRoute=findRoute(roadGraph, state.place, state.parcels[i].address);
+    }
+  }
+  return shortestRoute;
+}
+let state=VillageState.random();
+state
+shortestRoute (state);
+
 /* THE TEST DEMO OF PROGRAMM */
 // let emptyRoute=[];
 // runRobot(VillageState.random(), goalOrientedRobot, []);
-compareRobots(goalOrientedRobot, goalOrientedRobot,mailRoute,randomPick);
+// compareRobots(goalOrientedRobot, cleverRobot,mailRoute,randomPick);
 
 function compareRobots(robot1, robot2, mailRoute,randomPick) {
   let measurements=100;
@@ -154,8 +192,8 @@ function compareRobots(robot1, robot2, mailRoute,randomPick) {
 
   let rbt1Avg = rbt1Steps / measurements;
   let rbt2Avg = rbt2Steps / measurements;
-  console.log("The average of robot 1 is " + rbt1Avg);
-  console.log("The average of robot 2 is " + rbt2Avg);
+  console.log("The average of goalOrientedRobot  is " + rbt1Avg);
+  console.log("The average of cleverRobot is " + rbt2Avg);
 }
 
 function runRobotSteps(state, robot, memory) {
