@@ -132,48 +132,21 @@ function goalOrientedRobot({ place, parcels }, route) {
   return { direction: route[0], memory: route.slice(1) };
 }
 
-function cleverRobot(state, memory) {
-  let action = { direction: "", memory: "" };
-  if (memory.length == 0) {
-    let parcel = state.parcels[0];
-    memory1 = findRoute(roadGraph, state.place, parcel.place);
-    memory2 = findRoute(roadGraph, state.place, parcel.address);
-    memory= memory1.length>memory2.length? memory2: memory1;
-  } 
-  action.direction = memory[0];
-  action.memory = memory.slice(1);
-  console.log (action);
-  return action;
-}
-
-function shortestRoute (state){
-  let shortestRoute=[];
-  let currentRoute=[];
-  //init shortestRoute for comparing
-  if (state.parcels[0].place != state.place) {
-    shortestRoute= findRoute(roadGraph, state.place, state.parcels[0].place);
-  } else {
-    shortestRoute=findRoute (roadGraph, state.place, state.parcels[0].address);
+function cleverRobot({ place, parcels }, route) {
+  if (route.length == 0){
+    let routes = parcels.map(parcel => {
+      if (parcel.place != place) {
+        return {route: findRoute(roadGraph, place, parcel.place),
+                pickUp: true};
+      } else {
+        return {route: findRoute(roadGraph, place, parcel.address),
+                pickUp: false};
+      }
+    });
+    console.log (routes);
   }
-  // console.log (state.parcels[0]);
-  for (let i = 0;i < state.parcels.length; i++){
-    if (state.parcels[i].place != state.place) {
-      currentRoute=findRoute(roadGraph, state.place, state.parcels[i].place);
-    }
-    if (state.parcels[i].address != state.place) {
-      currentRoute=findRoute(roadGraph, state.place, state.parcels[i].address);
-    }
-  }
-  return shortestRoute;
+  return  {direction: route[0], memory: route.slice(1) };
 }
-let state=VillageState.random();
-state
-shortestRoute (state);
-
-/* THE TEST DEMO OF PROGRAMM */
-// let emptyRoute=[];
-// runRobot(VillageState.random(), goalOrientedRobot, []);
-// compareRobots(goalOrientedRobot, cleverRobot,mailRoute,randomPick);
 
 function compareRobots(robot1, robot2, mailRoute,randomPick) {
   let measurements=100;
@@ -181,11 +154,11 @@ function compareRobots(robot1, robot2, mailRoute,randomPick) {
   let rbt2Steps=0;
   let memoryRbt1=[];
   let memoryRbt2=[];
+  memoryRbt1=randomMemory(mailRoute,randomPick);
+  memoryRbt2=randomMemory(mailRoute,randomPick);
 
   for (let i =0; i<measurements;i++){
     let state= VillageState.random();
-    memoryRbt1=randomMemory(mailRoute,randomPick);
-    memoryRbt2=randomMemory(mailRoute,randomPick);
     rbt1Steps += runRobotSteps(state, robot1, memoryRbt1);
     rbt2Steps += runRobotSteps(state, robot2, memoryRbt2);
   }
@@ -201,14 +174,13 @@ function runRobotSteps(state, robot, memory) {
   for (; ; turns++) {
     if (state.parcels.length == 0) {
       console.log(`Done in ${turns} turns`);
-      break;
+      return turns;
     }
     let action = robot(state, memory);
     state = state.move(action.direction);
     memory = action.memory;
     console.log(`Moved to ${action.direction}`);
   }
-    return turns;
 }
 function randomMemory (mailRoute,randomPick) {
   let size = Math.floor(Math.random() * mailRoute.length);
@@ -221,3 +193,11 @@ function randomMemory (mailRoute,randomPick) {
   }
   return memory;
 }
+
+/* THE TEST DEMO OF PROGRAMM */
+// let emptyRoute=[];
+// runRobot(VillageState.random(), goalOrientedRobot, []);
+// compareRobots(goalOrientedRobot, cleverRobot,mailRoute,randomPick);
+// let s=shortestRoute(VillageState.random()); 
+// runRobot(VillageState.random(), cleverRobot, []);
+cleverRobot(VillageState.random() ,[]);
