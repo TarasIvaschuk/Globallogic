@@ -134,6 +134,7 @@ function goalOrientedRobot({ place, parcels }, route) {
 
 function cleverRobot({ place, parcels }, route) {
   if (route.length == 0){
+    // Describe a route for every parcel
     let routes = parcels.map(parcel => {
       if (parcel.place != place) {
         return {route: findRoute(roadGraph, place, parcel.place),
@@ -143,7 +144,13 @@ function cleverRobot({ place, parcels }, route) {
                 pickUp: false};
       }
     });
-    console.log (routes);
+    // This determines the priority a route gets when choosing. 
+    // Route length counts negatively, routes that pick up a package
+    // get a small bonus(0,5 > 0)
+    let score = function ({route, pickUp}) {
+      return (pickUp ? 0.5 : 0) - route.length;
+    };
+    route = routes.reduce((a, b) => score(a) > score(b) ? a : b).route;//Finds the shortest among "pick ups" and gets the route
   }
   return  {direction: route[0], memory: route.slice(1) };
 }
@@ -154,8 +161,7 @@ function compareRobots(robot1, robot2, mailRoute,randomPick) {
   let rbt2Steps=0;
   let memoryRbt1=[];
   let memoryRbt2=[];
-  memoryRbt1=randomMemory(mailRoute,randomPick);
-  memoryRbt2=randomMemory(mailRoute,randomPick);
+  memoryRbt1=memoryRbt2=randomMemory(mailRoute,randomPick);
 
   for (let i =0; i<measurements;i++){
     let state= VillageState.random();
@@ -195,9 +201,6 @@ function randomMemory (mailRoute,randomPick) {
 }
 
 /* THE TEST DEMO OF PROGRAMM */
-// let emptyRoute=[];
-// runRobot(VillageState.random(), goalOrientedRobot, []);
-// compareRobots(goalOrientedRobot, cleverRobot,mailRoute,randomPick);
-// let s=shortestRoute(VillageState.random()); 
-// runRobot(VillageState.random(), cleverRobot, []);
-cleverRobot(VillageState.random() ,[]);
+compareRobots(goalOrientedRobot, cleverRobot, mailRoute, randomPick);
+
+

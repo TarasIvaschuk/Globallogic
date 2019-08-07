@@ -62,17 +62,13 @@ int main( int argc, char *argv[])
         else
         {
             printf("\n\nEnter text to be coded.");
-            printf("Enter a blank line to end.\n\n");
+            printf("Press Enter to end writing\n\n");
             fgets(buffer,257,stdin);
-            // {
-                // if( buffer[0] == 0 )
-                //     break;
                 for( ctr = 0; ctr < strlen(buffer); ctr++ )
                 {
                     ch = encode_character( buffer[ctr], val );
                     ch = fputc(ch, fh);//* write the character to file
                 }
-            // }
         }
         printf("\n\nFile encoded to file.\n" );
         fclose(fh);
