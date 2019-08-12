@@ -63,7 +63,7 @@ int main( int argc, char *argv[])
         {
             printf("\n\nEnter text to be coded.");
             printf("Press Enter to end writing\n\n");
-            fgets(buffer,257,stdin);
+            fgets(buffer,257,stdin);// used instead of getc as deprecated
                 for( ctr = 0; ctr < strlen(buffer); ctr++ )
                 {
                     ch = encode_character( buffer[ctr], val );
