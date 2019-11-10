@@ -3,6 +3,12 @@
 *.i
 *.s
 *.o
+/**/ProjectSettings.json
+/**/*.sqlite
+/**/VSWorkspaceState.json
+/**/*.suo
+/**/*.db
+/**/*.opendb
 
 # Log file
 *.log
